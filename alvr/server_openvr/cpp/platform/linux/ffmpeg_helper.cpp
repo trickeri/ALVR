@@ -125,7 +125,11 @@ alvr::VkFrame::~VkFrame() {
     free(av_drmframe);
     if (av_vkframe) {
         vkDestroySemaphore(device, av_vkframe->sem[0], nullptr);
-        av_free(av_vkframe);
+        // Not av_free: the frame's private state holds the CUDA imports made by
+        // every Vulkan->CUDA transfer, and each pins the output image's memory.
+        // Leaking them cost ~300-400 MiB per encoder rebuild (each headset
+        // wake/app refocus) until NvEnc could no longer create a CUDA device.
+        av_vk_frame_free(&av_vkframe);
     }
 }
 

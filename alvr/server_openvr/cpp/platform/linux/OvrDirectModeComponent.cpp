@@ -634,6 +634,9 @@ void OvrDirectModeComponent::Present(vr::SharedTextureHandle_t syncTexture) {
         m_encGeneration++;
 
         try {
+            // Release the previous pipeline before its renderer goes away: the
+            // NvEnc pipeline and frame reference the renderer's output image.
+            enc.shutdown();
             enc.createImages(rendererCI);
             enc.initEncoding();
         } catch (std::exception const& e) {
