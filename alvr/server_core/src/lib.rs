@@ -97,7 +97,6 @@ pub enum ServerCoreEvent {
     },
     Buttons(Vec<ButtonEntry>), // Note: this is after mapping
     RequestIDR,
-    CaptureFrame,
     GameRenderLatencyFeedback(Duration), // only used for SteamVR
     ShutdownPending,
     RestartPending,
